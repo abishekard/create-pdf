@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             },1000);
 
-           // share(path);
+
 
             sharePdf(path);
         } catch (IOException e) {
@@ -243,41 +243,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
         }
 
-        // close the document
+
         document.close();
-    }
-
-
-
-    public static Bitmap loadBitmapFromView(View v, int width, int height) {
-        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-        v.draw(c);
-
-        return b;
-    }
-
-    public void share(String path){
-       // Uri uri = Uri.parse(path);
-        File file = new File(path);
-        Uri fileUri=Uri.parse(path);
-
-        try {
-            fileUri = FileProvider.getUriForFile(
-                    MainActivity.this,
-                    "com.abishek534.createpdf",
-                    file);
-        } catch (IllegalArgumentException e) {
-            Log.e("File Selector",
-                    "The selected file can't be shared: " );
-        }
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-        sharingIntent.setType("application/pdf");
-        startActivity(Intent.createChooser(sharingIntent, "Share pdf using"));
     }
 
     public void sharePdf(String path)
@@ -292,11 +259,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Uri outputPdfUri = FileProvider.getUriForFile(this, MainActivity.this.getPackageName() + ".provider", sharingFile);
 
-        Uri uri = Uri.parse("file://" +path + ".pdf");
         shareIntent.putExtra(Intent.EXTRA_STREAM, outputPdfUri);
 
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        //Write Permission might not be necessary
+
         shareIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
         startActivity(Intent.createChooser(shareIntent, "Share PDF using.."));
